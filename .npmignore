@@ -1,0 +1,13 @@
+# Source and tests — only dist/ is published (enforced by "files" in package.json)
+src/
+tests/
+examples/
+
+# Config
+tsconfig.json
+vitest.config.ts
+.env
+.env.*
+
+# Dev artefacts
+*.log
