@@ -1,0 +1,43 @@
+{
+  "name": "agent-scratchpad",
+  "version": "0.1.0",
+  "description": "Lightweight in-memory variable registry for LLM agents — store once, reference anywhere via {{var}} syntax",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "llm",
+    "agent",
+    "scratchpad",
+    "variable",
+    "registry",
+    "tool-use"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "vitest": "^3.0.0"
+  },
+  "dependencies": {
+    "@langchain/anthropic": "^1.3.23",
+    "@langchain/core": "^1.1.32",
+    "dotenv": "^17.3.1",
+    "langchain": "^1.2.32"
+  }
+}
