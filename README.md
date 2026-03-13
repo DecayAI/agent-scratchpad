@@ -12,6 +12,35 @@ LLM agents in multi-step workflows repeatedly regenerate identical content acros
 
 Zero dependencies. Framework-agnostic. Works with any LLM API.
 
+## Token Savings
+
+Every time an agent regenerates the same block of text, those are billable output tokens. `agent-scratchpad` collapses repeated generation into a single `scratchpad_set` call followed by cheap `{{var_name}}` references.
+
+Savings per run, using Claude Opus 4.6 output pricing ($25 / MTok):
+
+| Block (tokens) | Reuse | Tokens saved | Cost saved |
+|----------------|-------|-------------|------------|
+| 100            | 3×    | 200         | $0.005     |
+| 100            | 5×    | 400         | $0.010     |
+| 100            | 10×   | 900         | $0.023     |
+| 300            | 3×    | 600         | $0.015     |
+| 300            | 5×    | 1,200       | $0.030     |
+| 300            | 10×   | 2,700       | $0.068     |
+| 500            | 3×    | 1,000       | $0.025     |
+| 500            | 5×    | 2,000       | $0.050     |
+| 500            | 10×   | 4,500       | $0.113     |
+| 1,000          | 3×    | 2,000       | $0.050     |
+| 1,000          | 5×    | 4,000       | $0.100     |
+| 1,000          | 10×   | 9,000       | $0.225     |
+
+_Tokens saved = block_size × (reuse_count − 1). Cost saved calculated at output token rate._
+
+The mechanism: the agent calls `scratchpad_set` once to store the block, then emits `{{var_name}}` in subsequent outputs instead of regenerating the content. The host calls `resolve()` on the final output before returning it to the user — the substitution is invisible to the end user.
+
+Output tokens cost 3–5× more than input tokens across major providers, making repeated output generation the highest-leverage place to optimize token spend.
+
+The tool definitions themselves cost approximately ~741 tokens — meaning a single 300-token block reused 3× breaks even immediately.
+
 ## Install
 
 ```bash
